@@ -11,7 +11,6 @@ import (
 
 	"github.com/jobs-scraper/internal/models"
 	"github.com/jobs-scraper/internal/repo"
-	"golang.org/x/time/rate"
 )
 
 // JobDescriptionResult represents the result of job description scraping
@@ -43,10 +42,9 @@ func (p *JobPipeline) ProcessJobsStreaming(ctx context.Context, numPages int, jo
 	// Create channels for the pipeline
 	allJobs := make([]models.Job, 0, 100)
 	allJobDescriptions := make([]models.JobDescription, 0, 100)
-	// var mu sync.Mutex
 	var jbMu sync.Mutex
 	jobsChan := GetJobs(ctx, p.scraperService)
-	jobWithDescriptionChan := GetJobDescription(ctx, p.scraperService, jobsChan)
+	jobWithDescriptionChan := GetJobDescription(ctx, p.scraperService, jobsChan, 3)
 
 	for jobWithDescription := range jobWithDescriptionChan {
 		fmt.Printf("Received job description for job : %d\n", jobWithDescription.Job.ID)
@@ -65,43 +63,4 @@ func (p *JobPipeline) ProcessJobsStreaming(ctx context.Context, numPages int, jo
 	}
 
 	return nil
-}
-
-// jobDescriptionWorker processes jobs from jobChan and sends results to jobDescriptionChan
-func (p *JobPipeline) jobDescriptionWorker(ctx context.Context, jobChan <-chan models.Job, resultChan chan<- JobDescriptionResult) {
-
-	limiter := rate.NewLimiter(rate.Every(2*time.Second), 1) // 1 request per second
-
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case job, ok := <-jobChan:
-			if !ok {
-				return
-			}
-
-			if err := limiter.Wait(ctx); err != nil {
-				return
-			}
-
-			fmt.Printf("Processing job: %s\n", job.Title)
-
-			description, criteria, err := p.scraperService.ScrapeJobDescriptionWithContext(ctx, job)
-
-			result := JobDescriptionResult{
-				Job:         job,
-				Description: description,
-				Criteria:    criteria,
-				Error:       err,
-			}
-
-			select {
-			case resultChan <- result:
-			case <-ctx.Done():
-				return
-			}
-
-		}
-	}
 }

@@ -25,13 +25,12 @@ func GetJobs(context context.Context, scraperService *Scraper) <-chan models.Job
 	return jobChan
 }
 
-func GetJobDescription(context context.Context, scraperService *Scraper, jobChan <-chan models.Job) <-chan models.JobWithDescription {
+func GetJobDescription(context context.Context, scraperService *Scraper, jobChan <-chan models.Job, numWorkers int) <-chan models.JobWithDescription {
 	jobDescriptionChan := make(chan models.JobWithDescription, 100)
-	const numWorkers = 3
 
 	var wg sync.WaitGroup
 
-	// Start 3 worker goroutines
+	// Start worker goroutines
 	for range numWorkers {
 		wg.Add(1)
 		go func() {

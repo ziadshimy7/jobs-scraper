@@ -3,7 +3,7 @@ package utils
 import (
 	"context"
 	"fmt"
-	"math"
+	"io"
 	"net/http"
 	"time"
 )
@@ -14,23 +14,39 @@ type RetryConfig struct {
 	MaxDelay   time.Duration
 }
 
-func RetryableHTTPRequest(ctx context.Context, url string) (*http.Response, error) {
+type RetryableHTTPRequestImpl struct {
+	client *http.Client
+	config RetryConfig
+}
+
+func NewRetryableHTTPRequest(config RetryConfig) *RetryableHTTPRequestImpl {
 	client := &http.Client{
 		Timeout: 30 * time.Second,
 	}
 
+	return &RetryableHTTPRequestImpl{
+		client: client,
+		config: config,
+	}
+}
+
+func (s *RetryableHTTPRequestImpl) RetryableHTTPRequest(ctx context.Context, url, method string, body io.Reader, headers []http.Header) (*http.Response, error) {
+
 	var lastErr error
 
-	for attempt := 0; attempt <= 3; attempt++ {
-		// Create request with context
-		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	for attempt := 0; attempt <= s.config.MaxRetries; attempt++ {
+		req, err := http.NewRequestWithContext(ctx, method, url, body)
+
 		if err != nil {
 			return nil, fmt.Errorf("failed to create request: %w", err)
 		}
 
 		req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+		for _, header := range headers {
+			req.Header.Set(header.Get("Key"), header.Get("Value"))
+		}
 
-		resp, err := client.Do(req)
+		resp, err := s.client.Do(req)
 		if err != nil {
 			lastErr = err
 			fmt.Printf("Request attempt %d failed: %v\n", attempt+1, err)
@@ -49,10 +65,10 @@ func RetryableHTTPRequest(ctx context.Context, url string) (*http.Response, erro
 		}
 
 		// max attempts for now = 3
-		if attempt < 3 {
-			delay := min(time.Duration(math.Pow(2, float64(attempt)))*1*time.Second, 30*time.Second)
+		if attempt < s.config.MaxRetries {
+			delay := time.Second * 2
 
-			fmt.Printf("Retrying in %v... (attempt %d/%d)\n", delay, attempt+1, 3)
+			fmt.Printf("Retrying in %v... (attempt %d/%d)\n", delay, attempt+1, s.config.MaxRetries)
 
 			select {
 			case <-ctx.Done():

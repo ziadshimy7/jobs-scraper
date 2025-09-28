@@ -88,7 +88,13 @@ func (s *Scraper) ScrapeJobsWithContext(ctx context.Context, page int, params mo
 	jobs := make([]models.Job, 0, 10)
 	url := s.buildSearchURL(params, page)
 
-	res, err := utils.RetryableHTTPRequest(ctx, url)
+	retryableRequest := utils.NewRetryableHTTPRequest(utils.RetryConfig{
+		BaseDelay:  s.config.BaseDelay,
+		MaxDelay:   s.config.MaxDelay,
+		MaxRetries: s.config.MaxRetries,
+	})
+
+	res, err := retryableRequest.RetryableHTTPRequest(ctx, url, "GET", nil, nil)
 	if err != nil {
 		fmt.Printf("Error fetching URL after retries: %v\n", err)
 		return jobs, err
@@ -132,7 +138,13 @@ func (s *Scraper) ScrapeJobDescriptionWithContext(ctx context.Context, job model
 	var jobDescription string
 	url := s.buildJobDescriptionSearchURL(job.JobLink)
 
-	res, err := utils.RetryableHTTPRequest(ctx, url)
+	retryableRequest := utils.NewRetryableHTTPRequest(utils.RetryConfig{
+		MaxRetries: s.config.MaxRetries,
+		BaseDelay:  s.config.BaseDelay,
+		MaxDelay:   s.config.MaxDelay,
+	})
+
+	res, err := retryableRequest.RetryableHTTPRequest(ctx, url, "GET", nil, nil)
 	if err != nil {
 		fmt.Printf("Error fetching job description URL after retries: %v\n", err)
 		return "", map[string]string{}, err
