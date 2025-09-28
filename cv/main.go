@@ -12,8 +12,12 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, using system environment variables")
+	// Try to load .local.env first, then fallback to .env
+	if err := godotenv.Load("../.local.env"); err != nil {
+		log.Println("No .local.env file found, trying .env")
+		if err := godotenv.Load("../.env"); err != nil {
+			log.Println("No .env file found, using system environment variables")
+		}
 	}
 
 	dbConfig := infrastructure.LoadConfigFromEnv()
@@ -72,5 +76,4 @@ func main() {
 	}
 
 	log.Println(result)
-	// job,err :=
 }
