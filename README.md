@@ -1,4 +1,4 @@
-# LinkedIn Jobs Scraper
+<!-- # LinkedIn Jobs Scraper
 
 A robust Go application that scrapes LinkedIn job postings with **retry logic**, **exponential backoff**, and **concurrent processing** using a streaming pipeline architecture.
 
@@ -218,7 +218,7 @@ err = jobPipeline.ProcessJobsStreaming(ctx, 10, jobRepo, jobDescRepo, searchPara
 
 ### Before Optimization (Sequential + No Retries)
 - Scrape 100 jobs: ~2 minutes
-- Process descriptions: ~5 minutes  
+- Process descriptions: ~5 minutes
 - **Failures**: High failure rate due to network issues
 - **Total: ~7+ minutes** (with manual retries)
 
@@ -230,7 +230,7 @@ err = jobPipeline.ProcessJobsStreaming(ctx, 10, jobRepo, jobDescRepo, searchPara
 
 ### Key Improvements
 1. **Streaming Architecture**: Jobs processed immediately as scraped
-2. **Concurrent Workers**: 5 workers processing descriptions simultaneously  
+2. **Concurrent Workers**: 5 workers processing descriptions simultaneously
 3. **Intelligent Retries**: Automatic retry with exponential backoff
 4. **Resilient Network Handling**: Graceful handling of temporary failures
 5. **Smart Error Classification**: Skip permanent errors, retry temporary ones
@@ -252,7 +252,7 @@ Saved 250 job descriptions to database
 ```
 Request attempt 1 failed with status 503
 Retrying in 1s... (attempt 1/3)
-Request attempt 2 failed with status 502  
+Request attempt 2 failed with status 502
 Retrying in 2s... (attempt 2/3)
 Request attempt 3 succeeded
 ```
@@ -273,7 +273,7 @@ Request attempt 3 succeeded
 - Check if IP is temporarily blocked
 - Verify User-Agent header is set correctly
 
-**Database Connection Issues**  
+**Database Connection Issues**
 - Verify PostgreSQL is running: `pg_ctl status`
 - Check connection string in `.env` file
 - Ensure database exists and migrations ran
@@ -330,4 +330,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## ⚠️ Disclaimer
 
-This tool is for educational purposes. Please respect LinkedIn's Terms of Service and robots.txt. Use responsibly and consider rate limiting to avoid being blocked.
+This tool is for educational purposes. Please respect LinkedIn's Terms of Service and robots.txt. Use responsibly and consider rate limiting to avoid being blocked. -->
