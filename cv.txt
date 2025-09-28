@@ -1,0 +1,65 @@
+# Ziad Elshimy
+## Frontend Developer
+
+Results-driven Fullstack Developer with extensive experience in building responsive and visually appealing web applications. Seeking to advance to a Senior Fullstack Developer position, where I can utilize my technical expertise and leadership skills to guide a team of developers in the successful execution of complex projects.
+
+`ziadshimy7@gmail.com`  
+`01223381370`  
+`Alexandria`  
+[LinkedIn](https://www.linkedin.com/in/ziad-elshimy-1b31601b6)  
+[GitHub](https://github.com/ziadshimy7)
+
+---
+
+## Work Experience
+
+### kari - Fullstack Developer
+**Jun 2022 - current**  
+- Led a project to advance the company's online shopping platform, attracting more daily visitors and boosting conversion rates.
+- Led the development of multiple internal projects.
+- Mentored 2 junior developers, culminating in both earning promotions within 8 months due to enhanced skills.
+- Led task planning and coordinated project timelines, reducing overall project duration by 20%.
+
+### Callibri - Frontend Developer
+**Jan 2022 - Mar 2022**  
+- Collaborated with a designer to develop a user-friendly website interface, increasing user engagement.
+- Collaborated closely with senior developers to manage a complex design project, increasing efficiency.
+
+### EJADA - Frontend Developer
+**Mar 2021 - Dec 2021**  
+- Troubleshooted the website's problems and stay up to date on technology.
+
+---
+
+## Education
+
+### Ural Federal University - Bachelor's degree, Computer and Information Sciences, General
+**Jan 2017 - Dec 2021**
+
+---
+
+## Skills
+- HTML5
+- Cascading Style Sheets (CSS)
+- SCSS
+- Tailwind css
+- JavaScript
+- TypeScript
+- React.js
+- Redux.js
+- Next.js
+- Node.js
+- SSR
+- Webpack
+- Vite
+- Go (Golang)
+- Microservices
+- docker
+- docker-compose
+
+---
+
+## Certifications
+- CCNA
+- The Complete JavaScript Course 2023- Udemy
+- React - The Complete Guide - Udemy
